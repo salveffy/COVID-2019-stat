@@ -73,7 +73,7 @@ export default {
       items: [
         { title: 'Статистика по миру', icon: 'mdi-earth', link: '/' },
         { title: 'Статистика по стране', icon: 'mdi-flag-outline', link: '/countries' },
-        { title: 'Новости', icon: 'mdi-newspaper-variant-outline', link: '/' }
+        { title: 'Новости', icon: 'mdi-newspaper-variant-outline', link: '/countries' }
       ],
       drawer: false
     }
@@ -85,4 +85,5 @@ export default {
 #app {
   color: #2c3e50;
 }
+
 </style>

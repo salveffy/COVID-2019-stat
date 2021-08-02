@@ -15,167 +15,183 @@
       </v-row>
     </section>
     <section>
-      <h2 class="display-1 pa-3" align="center">Графики</h2>
+      <h2 class="display-1 pa-3" align="center">Графики за последний месяц</h2>
       <v-row align="center" justify="center">
         <line-chart
           v-for="visual in visuals"
           :key="visual.id"
           :chart-data="visual.chartData"
-          :options="visual.option"></line-chart>
+          :options="visual.option"
+        ></line-chart>
       </v-row>
     </section>
   </main>
 </template>
 
 <script>
-import StatCard from "./StatCard";
-import LineChart from "./lineChart";
+import StatCard from './StatCard'
+import LineChart from './lineChart'
 
 export default {
-  name: "HelloWorld",
-  data() {
+  name: 'HelloWorld',
+  data () {
     return {
       cards: [
         {
-          title: "Всего случаев",
-          bgColor: "grey darken-4",
+          title: 'Всего случаев заражения',
+          bgColor: 'yellow darken-3',
           amount: 0,
           amountNew: 0,
-          icon: "mdi-alert-decagram-outline",
+          icon: 'mdi-alert-decagram-outline'
         },
         {
-          title: "Смертность",
-          bgColor: "grey darken-4",
+          title: 'Смертность',
+          bgColor: 'red darken-3',
           amount: 0,
           amountNew: 0,
-          icon: "mdi-emoticon-dead-outline",
+          icon: 'mdi-emoticon-dead-outline'
         },
         {
-          title: "Выздоровели",
-          bgColor: "grey darken-4",
+          title: 'Выздоровели',
+          bgColor: 'light-green darken-',
           amount: 0,
           amountNew: 0,
-          icon: "mdi-hospital-building",
-        },
+          icon: 'mdi-hospital-building'
+        }
       ],
       visuals: [],
       continents: null,
       allData: null,
       recovered: null
-    };
+    }
   },
   components: {
     StatCard,
-    LineChart,
+    LineChart
   },
-  mounted() {
+  mounted () {
     this.axios
-      .get("https://corona.lmao.ninja/v2/continents?sort")
+      .get('https://corona.lmao.ninja/v2/continents?sort')
       .then((response) => {
-        this.continents = response;
-        this.updateStats();
+        this.continents = response
+        this.updateStats()
       })
       .catch((error) => {
-        console.error("API error: ", error);
-      });
+        console.error('API error: ', error)
+      })
 
     this.axios
-      .get("https://corona.lmao.ninja/v2/historical/all")
+      .get('https://corona.lmao.ninja/v2/historical/all')
       .then((response) => {
-        this.allData = response;
-        this.updateVisuals();
-      });
+        this.allData = response
+        this.updateVisuals()
+      })
   },
   methods: {
-    updateStats() {
-      let data = this.continents.data;
+    updateStats () {
+      let data = this.continents.data
 
-      let cases = 0;
-      let deaths = 0;
-      let recoveries = 0;
+      let cases = 0
+      let deaths = 0
+      let recoveries = 0
 
       for (let elem of data) {
-        cases += elem.cases;
-        deaths += elem.deaths;
-        recoveries += elem.recovered;
+        cases += elem.cases
+        deaths += elem.deaths
+        recoveries += elem.recovered
       }
 
-      this.cards[0].amount += cases;
-      this.cards[1].amount += deaths;
-      this.cards[2].amount += recoveries;
+      this.cards[0].amount += cases
+      this.cards[1].amount += deaths
+      this.cards[2].amount += recoveries
     },
-    updateVisuals() {
-      let data = this.allData.data;
-      let cases = data.cases;
-      let recoveries = data.recovered;
-      let deaths = data.deaths;
+    updateVisuals () {
+      let data = this.allData.data
+      let cases = data.cases
+      let recoveries = data.recovered
+      let deaths = data.deaths
 
-      let labels = [];
-      let casesPerDay = [];
-      let recoveriesPerDay = [];
-      let deathsPerDay = [];
-      
+      let labels = []
+      let casesPerDay = []
+      let recoveriesPerDay = []
+      let deathsPerDay = []
 
       for (let key in cases) {
-        labels.push(key);
-        casesPerDay.push(cases[key]);
-        recoveriesPerDay.push(recoveries[key]);
-        deathsPerDay.push(deaths[key]);  
+        labels.push(key)
+        casesPerDay.push(cases[key] / 1000000)
+        recoveriesPerDay.push(
+          (recoveries[key] + 49000000) / 1000000
+        ) /* Добавил 49м, так как с https://corona.lmao.ninja/v2/historical/all приходят неверные данные */
+        deathsPerDay.push(deaths[key] / 1000000)
       }
-     
+
       this.visuals.push({
         id: 1,
         chartData: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Всего случаев",
-            backgroundColor: "black",
-            data: casesPerDay,
-          }],
-      },
-      options:{responsive: true, maintainAspectRatio: false}
+          labels: labels,
+          datasets: [
+            {
+              label: 'Всего случаев заражения, в миллионах',
+              backgroundColor: '#F9A825',
+              data: casesPerDay
+            }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
       })
 
       this.visuals.push({
         id: 2,
         chartData: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Смертность",
-            backgroundColor: "black",
-            data: deathsPerDay,
-          }],
-      },
-      options:{responsive: true, maintainAspectRatio: false}
+          labels: labels,
+          datasets: [
+            {
+              label: 'Смертность, в миллионах',
+              backgroundColor: '#C62828',
+              data: deathsPerDay
+            }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
       })
 
       this.visuals.push({
         id: 3,
         chartData: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Выздоровели",
-            backgroundColor: "black",
-            data: recoveriesPerDay,
-          }],
-      },
-      options:{responsive: true, maintainAspectRatio: false}
+          labels: labels,
+          datasets: [
+            {
+              label: 'Выздоровели, в милионнах',
+              backgroundColor: '#558B2F',
+              data: recoveriesPerDay
+            }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
       })
 
-      let lastDayCases = casesPerDay[casesPerDay.length - 1] - casesPerDay[casesPerDay.length - 2];
-      let lastDayDeaths = deathsPerDay[deathsPerDay.length - 1] - deathsPerDay[deathsPerDay.length - 2];
-      let lastDayRecoveries = recoveriesPerDay[recoveriesPerDay.length - 1] - recoveriesPerDay[recoveriesPerDay.length - 2];
+      let lastDayCases = Math.round(
+        (casesPerDay[casesPerDay.length - 1] -
+          casesPerDay[casesPerDay.length - 2]) *
+          1000000
+      )
+      let lastDayDeaths = Math.round(
+        (deathsPerDay[deathsPerDay.length - 1] -
+          deathsPerDay[deathsPerDay.length - 2]) *
+          1000000
+      )
+      let lastDayRecoveries = Math.round(
+        (recoveriesPerDay[recoveriesPerDay.length - 1] -
+          recoveriesPerDay[recoveriesPerDay.length - 2]) *
+          1000000
+      )
 
-      this.cards[0].amountNew += lastDayCases;
-      this.cards[1].amountNew += lastDayDeaths;
+      this.cards[0].amountNew += lastDayCases
+      this.cards[1].amountNew += lastDayDeaths
       this.cards[2].amountNew += lastDayRecoveries
-
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

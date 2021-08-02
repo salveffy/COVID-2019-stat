@@ -26,18 +26,18 @@
 
 <script>
 export default {
-  name: "StatCard",
-  data() {
-    return {};
+  name: 'StatCard',
+  data () {
+    return {}
   },
   props: {
     bgColor: String,
     cardIcon: String,
     cardTitle: String,
     cardAmount: Number,
-    cardAmountNew: Number,
-  },
-};
+    cardAmountNew: Number
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
