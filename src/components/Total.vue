@@ -16,14 +16,13 @@
     </section>
     <section>
       <h2 class="display-1 pa-3" align="center">Графики</h2>
-      <div class="small">
+      <v-row align="center" justify="center">
         <line-chart
           v-for="visual in visuals"
           :key="visual.id"
           :chart-data="visual.chartData"
-          :options="visual.option"
-        ></line-chart>
-      </div>
+          :options="visual.option"></line-chart>
+      </v-row>
     </section>
   </main>
 </template>
@@ -59,15 +58,10 @@ export default {
           icon: "mdi-hospital-building",
         },
       ],
-      visuals: [
-        {
-          id: 1,
-          chartData: null,
-          options: { responsive: true, maintainAspectRatio: false },
-        },
-      ],
+      visuals: [],
       continents: null,
       allData: null,
+      recovered: null
     };
   },
   components: {
@@ -97,49 +91,88 @@ export default {
       let data = this.continents.data;
 
       let cases = 0;
-      let todayCases = 0;
       let deaths = 0;
-      let todayDeaths = 0;
       let recoveries = 0;
 
       for (let elem of data) {
         cases += elem.cases;
-        todayCases += elem.todayCases;
         deaths += elem.deaths;
-        todayDeaths += elem.todayDeaths;
         recoveries += elem.recovered;
       }
 
       this.cards[0].amount += cases;
-      this.cards[0].amountNew += todayCases;
       this.cards[1].amount += deaths;
-      this.cards[1].amountNew += todayDeaths;
       this.cards[2].amount += recoveries;
     },
     updateVisuals() {
-      let data = this.allData.data.cases;
+      let data = this.allData.data;
+      let cases = data.cases;
+      let recoveries = data.recovered;
+      let deaths = data.deaths;
 
       let labels = [];
       let casesPerDay = [];
+      let recoveriesPerDay = [];
+      let deathsPerDay = [];
+      
 
-      for (let key in data) {
+      for (let key in cases) {
         labels.push(key);
-        casesPerDay.push(data[key]);
+        casesPerDay.push(cases[key]);
+        recoveriesPerDay.push(recoveries[key]);
+        deathsPerDay.push(deaths[key]);  
       }
-
-      console.log(labels);
-      console.log(casesPerDay);
-
-      this.visuals[0].chartData = {
+     
+      this.visuals.push({
+        id: 1,
+        chartData: {
         labels: labels,
         datasets: [
           {
             label: "Всего случаев",
-            backgroundColor: "",
+            backgroundColor: "black",
             data: casesPerDay,
-          },
-        ],
-      };
+          }],
+      },
+      options:{responsive: true, maintainAspectRatio: false}
+      })
+
+      this.visuals.push({
+        id: 2,
+        chartData: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Смертность",
+            backgroundColor: "black",
+            data: deathsPerDay,
+          }],
+      },
+      options:{responsive: true, maintainAspectRatio: false}
+      })
+
+      this.visuals.push({
+        id: 3,
+        chartData: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Выздоровели",
+            backgroundColor: "black",
+            data: recoveriesPerDay,
+          }],
+      },
+      options:{responsive: true, maintainAspectRatio: false}
+      })
+
+      let lastDayCases = casesPerDay[casesPerDay.length - 1] - casesPerDay[casesPerDay.length - 2];
+      let lastDayDeaths = deathsPerDay[deathsPerDay.length - 1] - deathsPerDay[deathsPerDay.length - 2];
+      let lastDayRecoveries = recoveriesPerDay[recoveriesPerDay.length - 1] - recoveriesPerDay[recoveriesPerDay.length - 2];
+
+      this.cards[0].amountNew += lastDayCases;
+      this.cards[1].amountNew += lastDayDeaths;
+      this.cards[2].amountNew += lastDayRecoveries
+
     },
   },
 };
