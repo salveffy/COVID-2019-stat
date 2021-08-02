@@ -11,13 +11,15 @@
       <v-icon>{{ cardIcon }}</v-icon>
     </div>
     <v-card-title class="headline text-bold">
-      <span class="count" :title="cardAmountNew + 'last day'">
+      <span class="count">
         {{ cardAmount }}
       </span>
     </v-card-title>
-
     <v-card-subtitle class="text-center text-bold">
       {{ cardTitle }}
+    </v-card-subtitle>
+    <v-card-subtitle class="text-center text-bold">
+        {{'За сегодня ' + cardAmountNew }}
     </v-card-subtitle>
   </v-card>
 </template>
