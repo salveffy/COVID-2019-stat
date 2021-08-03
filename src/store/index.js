@@ -7,8 +7,8 @@ import country from './country'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    modules: {
-        common,
-        country
-    }
+  modules: {
+    common,
+    country
+  }
 })

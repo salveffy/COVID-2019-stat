@@ -128,7 +128,7 @@ export default {
         deathsPerDay.push(deaths[key] / 1000000)
       }
 
-      for ( index = 0, len = labels.length; index < len; index++) {        
+      for (index = 0, len = labels.length; index < len; index++) {
         labels[index] = moment(labels[index]).format('D MMM ')
       }
 

@@ -37,19 +37,16 @@ export default {
           let cases = []
           let deaths = []
           let recoveries = []
-
-
           for (let key in data.timeline.cases) {
             labels.push(key)
 
-            cases.push((data.timeline.cases[key])/1000000)
+            cases.push((data.timeline.cases[key]) / 1000000)
             deaths.push(data.timeline.deaths[key])
-            recoveries.push(data.timeline.recovered[key]/1000000)
+            recoveries.push(data.timeline.recovered[key] / 1000000)
           }
-          
           moment.locale('ru')
 
-          for (index = 0, len = labels.length; index < len; index++) {        
+          for (index = 0, len = labels.length; index < len; index++) {
             labels[index] = moment(labels[index]).format('D MMM ')
           }
 
@@ -73,7 +70,7 @@ export default {
             deaths[deaths.length - 1],
             recoveries[recoveries.length - 1],
             datasets,
-            labels,
+            labels
           )
 
           console.log('new state is', this.state)
