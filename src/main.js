@@ -6,6 +6,9 @@ import router from './router'
 import vuetify from '@/plugins/vuetify'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VueMoment from 'vue-moment'
+
+Vue.use(VueMoment)
 
 Vue.use(VueAxios, axios)
 

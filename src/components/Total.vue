@@ -1,8 +1,8 @@
 <template>
   <main class="pa-3">
     <section>
-      <h1 class="display-1 pa-3" align="center">Статистика по миру</h1>
-      <v-row align="center" justify="center">
+      <h1 class="display-1 mb-5 pa-3" align="center">Статистика по миру</h1>
+      <v-row align="center" justify="center" class="mb-5">
         <stat-card
           v-for="card in cards"
           :key="card"
@@ -15,7 +15,7 @@
       </v-row>
     </section>
     <section>
-      <h2 class="display-1 pa-3" align="center">Графики за последний месяц</h2>
+      <h2 class="display-1 mb-10 pa-3" align="center">Графики за последний месяц</h2>
       <v-row align="center" justify="center">
         <line-chart
           v-for="visual in visuals"
@@ -31,6 +31,7 @@
 <script>
 import StatCard from './StatCard'
 import LineChart from './lineChart'
+import moment from 'moment'
 
 export default {
   name: 'HelloWorld',
@@ -53,7 +54,7 @@ export default {
         },
         {
           title: 'Выздоровели',
-          bgColor: 'light-green darken-',
+          bgColor: 'light-green darken-3',
           amount: 0,
           amountNew: 0,
           icon: 'mdi-hospital-building'
@@ -112,6 +113,8 @@ export default {
       let deaths = data.deaths
 
       let labels = []
+      let newDateFormat = []
+      let index, len
       let casesPerDay = []
       let recoveriesPerDay = []
       let deathsPerDay = []
@@ -125,10 +128,16 @@ export default {
         deathsPerDay.push(deaths[key] / 1000000)
       }
 
+      for (index = 0, len = labels.length; index < len; index++) {
+        moment.locale('ru')
+        newDateFormat[index] = moment(labels[index]).format('D MMM ')
+        console.log(newDateFormat[index])
+      }
+
       this.visuals.push({
         id: 1,
         chartData: {
-          labels: labels,
+          labels: newDateFormat,
           datasets: [
             {
               label: 'Всего случаев заражения, в миллионах',
@@ -143,7 +152,7 @@ export default {
       this.visuals.push({
         id: 2,
         chartData: {
-          labels: labels,
+          labels: newDateFormat,
           datasets: [
             {
               label: 'Смертность, в миллионах',
@@ -158,7 +167,7 @@ export default {
       this.visuals.push({
         id: 3,
         chartData: {
-          labels: labels,
+          labels: newDateFormat,
           datasets: [
             {
               label: 'Выздоровели, в милионнах',
