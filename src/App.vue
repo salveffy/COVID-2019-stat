@@ -39,10 +39,9 @@
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
-
         <v-list>
-          <v-list-item v-for="n in 5" :key="n" @click="() => {}">
-            <v-list-item-title>Option {{ n }}</v-list-item-title>
+          <v-list-item v-for="country in countries" :key="country" @click="() => {}" link :to="'/country/' + country">
+            <v-list-item-title @click="updateCountry(country)">{{ country }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -77,13 +76,24 @@ export default {
       ],
       drawer: false
     }
+  },
+  mounted () {
+    this.$store.dispatch('updateTopCountries')
+  },
+  methods: {
+    updateCountry (country) {
+      this.$store.dispatch('newCountryName', country)
+    }
+  },
+  computed: {
+    countries () {
+      return this.$store.getters.topCountries
+    }
   }
 }
 </script>
-
 <style>
 #app {
   color: #2c3e50;
 }
-
 </style>

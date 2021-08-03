@@ -7,6 +7,7 @@ import vuetify from '@/plugins/vuetify'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueMoment from 'vue-moment'
+import store from '@/store'
 
 Vue.use(VueMoment)
 
@@ -20,5 +21,6 @@ new Vue({
   router,
   components: { App },
   template: '<App/>',
-  vuetify
+  vuetify,
+  store
 })

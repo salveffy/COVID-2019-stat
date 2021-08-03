@@ -15,7 +15,7 @@
       </v-row>
     </section>
     <section>
-      <h2 class="display-1 mb-10 pa-3" align="center">Графики за последний месяц</h2>
+      <h2 class="display-1 mb-5 pa-3" align="center">Графики за последний месяц</h2>
       <v-row align="center" justify="center">
         <line-chart
           v-for="visual in visuals"
@@ -71,6 +71,7 @@ export default {
     LineChart
   },
   mounted () {
+    moment.locale('ru')
     this.axios
       .get('https://corona.lmao.ninja/v2/continents?sort')
       .then((response) => {
@@ -113,7 +114,6 @@ export default {
       let deaths = data.deaths
 
       let labels = []
-      let newDateFormat = []
       let index, len
       let casesPerDay = []
       let recoveriesPerDay = []
@@ -128,16 +128,14 @@ export default {
         deathsPerDay.push(deaths[key] / 1000000)
       }
 
-      for (index = 0, len = labels.length; index < len; index++) {
-        moment.locale('ru')
-        newDateFormat[index] = moment(labels[index]).format('D MMM ')
-        console.log(newDateFormat[index])
+      for ( index = 0, len = labels.length; index < len; index++) {        
+        labels[index] = moment(labels[index]).format('D MMM ')
       }
 
       this.visuals.push({
         id: 1,
         chartData: {
-          labels: newDateFormat,
+          labels: labels,
           datasets: [
             {
               label: 'Всего случаев заражения, в миллионах',
@@ -152,7 +150,7 @@ export default {
       this.visuals.push({
         id: 2,
         chartData: {
-          labels: newDateFormat,
+          labels: labels,
           datasets: [
             {
               label: 'Смертность, в миллионах',
@@ -167,7 +165,7 @@ export default {
       this.visuals.push({
         id: 3,
         chartData: {
-          labels: newDateFormat,
+          labels: labels,
           datasets: [
             {
               label: 'Выздоровели, в милионнах',
