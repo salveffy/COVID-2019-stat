@@ -94,7 +94,7 @@ export default {
       axios
         .get('https://corona.lmao.ninja/v2/countries?sort=active')
         .then((response) => {
-          let data = response.data.slice(0, 7)
+          let data = response.data.slice(0, 15)
 
           data = data.map((country) => { return country.country })
 
